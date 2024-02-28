@@ -1,49 +1,19 @@
 #include <iostream>
 using namespace std;
 
-int dimensi1, dimensi2, dimensi3;
+int dimensiTinggi, dimensiLebar, dimensiPanjang;
 double rataRata = 0;
 
 
-void isiArray2D(int dimensi1, int dimensi2)
+void isiArray3D(int dimensiTinggi, int dimensiLebar, int dimensiPanjang)
 {
-    int array[dimensi1][dimensi2];
+    int array[dimensiTinggi][dimensiLebar][dimensiPanjang];
 
-    for (int i = 0; i < dimensi1; i++)
+    for (int i = 0; i < dimensiTinggi; i++)
     {
-        for (int j = 0; j < dimensi2; j++)
+        for (int j = 0; j < dimensiPanjang; j++)
         {
-            cout << "Masukkan nilai array ke-" << i << "," << j << ": ";
-            cin >> array[i][j];
-
-            rataRata += array[i][j];
-        }
-    }
-
-
-    cout << "Array yang dimasukan adalah: \n";
-    for (int i = 0; i < dimensi1; i++)
-    {
-        for (int j = 0; j < dimensi2 ; j++)
-        {
-            cout << array[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    cout << "Rata-rata dari array tersebut adalah: " << rataRata / (dimensi1 * dimensi2) << endl;
-}
-
-
-void isiArray3D(int dimensi1, int dimensi2, int dimensi3)
-{
-    int array[dimensi1][dimensi2][dimensi3];
-
-    for (int i = 0; i < dimensi1; i++)
-    {
-        for (int j = 0; j < dimensi2; j++)
-        {
-            for (int k = 0; k < dimensi3; k++)
+            for (int k = 0; k < dimensiLebar; k++)
             {
                 cout << "Masukkan nilai array ke-" << i << "," << j << "," << k << ": ";
                 cin >> array[i][j][k];
@@ -55,11 +25,11 @@ void isiArray3D(int dimensi1, int dimensi2, int dimensi3)
 
 
     cout << "Array yang dimasukkan adalah: \n";
-    for (int i = 0; i < dimensi1; i++)
+    for (int i = 0; i < dimensiTinggi; i++)
     {
-        for (int j = 0; j < dimensi2; j++)
+        for (int j = 0; j < dimensiLebar; j++)
         {
-            for (int k = 0; k < dimensi3; k++)
+            for (int k = 0; k < dimensiPanjang; k++)
             {
                 cout << array[i][j][k] << " ";
             }
@@ -68,27 +38,21 @@ void isiArray3D(int dimensi1, int dimensi2, int dimensi3)
         cout << endl;
     }
 
-    cout << "Rata-rata dari array tersebut adalah: " << rataRata / (dimensi1 * dimensi2 * dimensi3) << endl;
+    cout << "Rata-rata dari array tersebut adalah: " << rataRata / (dimensiTinggi * dimensiLebar * dimensiPanjang) << endl;
 }
 
 
 int main()
 {
-    cout << "Masukkan dimensi pertama array: ";
-    cin >> dimensi1;
-    cout << "Masukkan dimensi kedua array: ";
-    cin >> dimensi2;
-    cout << "Masukkan dimensi ketiga array: ";
-    cin >> dimensi3;
+    printf("Bayangkan array seperti sebuah balok! \n");
+    cout << "Masukkan dimensi tinggi array: ";
+    cin >> dimensiTinggi;
+    cout << "Masukkan dimensi lebar array: ";
+    cin >> dimensiLebar;
+    cout << "Masukkan dimensi panjang array: ";
+    cin >> dimensiPanjang;
 
-    if (dimensi3 == 0)
-        {
-        isiArray2D(dimensi1, dimensi2);
-    }
-        else
-        {
-        isiArray3D(dimensi1, dimensi2, dimensi3);
-    }
+    isiArray3D(dimensiTinggi, dimensiLebar, dimensiPanjang);
 
 
     return 0;
