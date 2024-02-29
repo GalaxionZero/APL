@@ -21,6 +21,7 @@ void isiArray3D(int dimensiTinggi, int dimensiLebar, int dimensiPanjang)
                 rataRata += array[i][j][k];
             }
         }
+    cout << endl
     }
 
 
