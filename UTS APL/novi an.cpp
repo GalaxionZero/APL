@@ -1,0 +1,296 @@
+#include <iostream>
+#include <limits>
+#include <thread>
+#include <chrono>
+
+using namespace std;
+using namespace this_thread;
+using namespace chrono;
+
+
+struct perumahan
+{
+    string namaPemilik;
+    string nomorKontak;
+    string nomorRumah;
+};
+
+
+perumahan per[10];
+
+
+string rumah[10] = {"A01", "A02", "A03", "A04", "A05", "A06", "B01", "B02", "B03", "B04"};
+
+void jeda(int detik)
+{
+    sleep_for(seconds(detik));
+}
+
+
+void mergeUp(perumahan arr[], int left, int middle, int right)
+{
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+
+    perumahan kiri[n1], kanan[n2];
+
+    for (int i = 0; i < n1; i++)
+        kiri[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        kanan[j] = arr[middle + 1 + j];
+
+    int i = 0;
+    int j = 0;
+    int k = left;
+
+    while (i < n1 && j < n2)
+    {
+        if (kiri[i].namaPemilik <= kanan[j].namaPemilik)
+        {
+            arr[k] = kiri[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = kanan[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1)
+    {
+        arr[k] = kiri[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2)
+    {
+        arr[k] = kanan[j];
+        j++;
+        k++;
+    }
+}
+
+
+void mergeSort(perumahan arr[], int left, int right)
+{
+    if (left >= right)
+        return;
+
+    int middle = left + (right - left) / 2;
+    mergeSort(arr, left, middle);
+    mergeSort(arr, middle + 1, right);
+    mergeUp(arr, left, middle, right);
+}
+
+
+void printRumah(perumahan arr[], int size)
+{
+    system("cls");
+    cout << "=============================================================" << endl;
+    for (int i = 0; i < size; i++)
+    {
+        cout << " | Pemilik: " << arr[i].namaPemilik << " | Kontak: " << arr[i].nomorKontak  << " | Nomor Rumah: " << arr[i].nomorRumah << endl;
+    }
+    cout << "=============================================================" << endl;
+    cout << "                Tekan Enter untuk Melanjutkan                " << endl;
+    cin.get();
+}
+
+
+void ubahPemilik()
+{
+    system("cls");
+    cout << "===================================" << endl;
+    cout << "             MENU UBAH             " << endl;
+    cout << "  Masukkan nomor rumah yang ingin  " << endl;
+    cout << "  diubah pemiliknya (contoh: A01)  " << endl;
+    cout << "===================================" << endl;
+    cout << "  Masukkan No. Rumah : ";
+    string nomorRumah;
+    cin >> noskipws >> nomorRumah;
+    cin.clear();
+    cin.ignore();
+
+    int index = -1;
+    for (int i = 0; i < 10; i++)
+    {
+        if (per[i].nomorRumah == nomorRumah)
+        {
+            index = i;
+            break;
+        }
+    }
+
+    if (index != -1)
+    {
+        do{
+            cout << "\n\nMasukkan nama pemilik baru: ";
+            getline(cin, per[index].namaPemilik);
+        }while (per[index].namaPemilik.empty());
+
+        do{
+            cout << "\nMasukkan nomor kontak pemilik baru: ";
+            getline(cin, per[index].nomorKontak);
+        }while (per[index].nomorKontak.empty());
+
+        system("cls");
+        cout << "===========================================" << endl;
+        cout << "  Data pemilik rumah " << nomorRumah << " berhasil diubah" << endl;
+        cout << "===========================================" << endl;
+        cout << "   Tekan Enter untuk Melanjutkan   " << endl;
+        cin.get();
+        system("cls");
+    }
+    else
+    {
+        system("cls");
+        cout << "===================================" << endl;
+        cout << "    Nomor rumah tidak ditemukan    " << endl;
+        cout << "===================================" << endl;
+        cout << "   Tekan Enter untuk Melanjutkan   " << endl;
+        cin.get();
+    }
+}
+
+
+int binarySearch(perumahan arr[], int left, int right, string nama)
+{
+    int size = sizeof(per) / sizeof(per[0]);
+    mergeSort(per, 0, size - 1);
+
+    if (right >= left)
+    {
+        int mid = left + (right - left) / 2;
+
+        if (arr[mid].namaPemilik == nama)
+            return mid;
+
+        if (arr[mid].namaPemilik > nama)
+            return binarySearch(arr, left, mid - 1, nama);
+
+        return binarySearch(arr, mid + 1, right, nama);
+    }
+
+    return -1;
+}
+
+
+int menu()
+{
+
+    while (true)
+    {
+        int pilihan;
+        cout << "===================================" << endl;
+        cout << "  1. Ubah data pemilik rumah\n"
+                "  2. Tampilkan pemilik rumah\n"
+                "  3. Search nama pemilik rumah\n"
+                "  0. Keluar Program" << endl;
+        cout << "===================================" << endl;
+        cout << "  Masukkan pilihan: ";
+        if (cin  >> pilihan && pilihan >= 0 && pilihan < 4)
+        {
+            cin.clear();
+            cin.ignore();
+            return pilihan;
+        }
+            else
+            {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                system("cls");
+                cout << "===================================" << endl;
+                cout << "          Inputan Invalid          " << endl;
+                cout << "===================================" << endl;
+                cout << "     Tekan Enter untuk Kembali     ";
+                cin.get();
+                system("cls");
+            }
+    }
+}
+
+
+int main()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        per[i].namaPemilik = "Tidak ada";
+        per[i].nomorKontak = "Tidak ada";
+        per[i].nomorRumah = rumah[i];
+    }
+
+    cout << "Please wait a moment...";
+    jeda(5);
+
+    while (true)
+    {
+        system("cls");
+        cout << "===================================" << endl;
+        cout << "          SELAMAT DATANG\n"
+                "       DI PROGRAM PERUMAHAN"         << endl;
+
+        int pilihan = menu();
+
+        int size = sizeof(per) / sizeof(per[0]);
+
+        switch (pilihan)
+        {
+            case 1:
+                ubahPemilik();
+                break;
+            case 2:
+                mergeSort(per, 0, size - 1);
+                printRumah(per, size);
+                break;
+            case 3:
+                {
+                    string nama;
+                    system("cls");
+                    cout << "===================================" << endl;
+                    cout << "             MENU CARI             " << endl;
+                    cout << "     Masukkan nama pemilik yang    " << endl;
+                    cout << "            ingin dicari           " << endl;
+                    cout << "===================================" << endl;
+                    cout << "  Masukkan nama : ";
+                    getline(cin, nama);
+                    int result = binarySearch(per, 0, size - 1, nama);
+                    if (result != -1)
+                    {
+
+                        cout << "\n\n===================================" << endl;
+                        cout << "Nama pemilik " << nama << " yang sedang tinggal di " << per[result].nomorRumah << "." << endl;
+                        cout << "===================================" << endl;
+                        cout << " | Pemilik: " << per[result].namaPemilik << " | Kontak: " << per[result].nomorKontak << " | Nomor Rumah: " << per[result].nomorRumah << endl;
+                        cout << "===================================" << endl;
+                        cout << "     Tekan Enter untuk Kembali     ";
+                        cin.get();
+                    }
+                    else
+                    {
+                        system("cls");
+                        cout << "===================================" << endl;
+                        cout << "  Nama pemilik " << nama << " tidak ditemukan." << endl;
+                        cout << "===================================" << endl;
+                        cout << "     Tekan Enter untuk Kembali     ";
+                        cin.get();
+                    }
+                    break;
+                }
+            default:
+                system("cls");
+                cout << "===================================" << endl;
+                cout << "          Inputan Invalid          " << endl;
+                cout << "===================================" << endl;
+                cout << "     Tekan Enter untuk Kembali     ";
+                cin.get();
+                break;
+        }
+    }
+
+    return 0;
+}
+
+
